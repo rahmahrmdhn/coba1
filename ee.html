@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Bilangan Pecahan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-200 via-blue-200 to-indigo-200 flex items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-6">
+    <h1 class="text-center text-4xl font-extrabold mb-4 text-purple-600">🎮 Game Bilangan Pecahan 🎮</h1>
+    <div id="game" class="flex flex-col items-center">
+      <div class="mb-4">
+        <label for="denominator" class="mr-2 text-lg">Pilih Penyebut:</label>
+        <select id="denominator" class="p-2 rounded-lg border">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label class="mr-2 text-lg">Pilih Pembilang:</label>
+        <input type="number" id="numerator" class="w-16 p-2 text-center rounded-lg border" min="1" max="8" value="1" />
+      </div>
+      <button id="colorBtn" class="bg-purple-500 text-white px-4 py-2 rounded-full mb-6 hover:bg-purple-600 transition">Warna Pecahan!</button>
+
+      <div id="circle" class="relative w-64 h-64 rounded-full border-4 border-purple-600 overflow-hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    const circle = document.getElementById('circle');
+    const denomSelect = document.getElementById('denominator');
+    const numerInput = document.getElementById('numerator');
+    const colorBtn = document.getElementById('colorBtn');
+
+    function drawSlices(denominator, numerator) {
+      circle.innerHTML = '';
+      const angle = 360 / denominator;
+      for (let i = 0; i < denominator; i++) {
+        const slice = document.createElement('div');
+        slice.className = 'absolute top-0 left-0 w-full h-full transform origin-center';
+        slice.style.transform = `rotate(${i * angle}deg)`;
+        slice.innerHTML = `
+          <div class=\"absolute top-0 left-1/2 w-1/2 h-full origin-left rounded-l-full bg-gray-200\"></div>
+        `;
+        circle.appendChild(slice);
+      }
+      // Color numerator slices
+      for (let i = 0; i < numerator; i++) {
+        const target = circle.children[i];
+        const colorDiv = target.querySelector('div');
+        colorDiv.classList.remove('bg-gray-200');
+        colorDiv.classList.add('bg-pink-400');
+        // animate coloring
+        colorDiv.style.transition = 'background-color 0.5s ease';
+      }
+    }
+
+    colorBtn.addEventListener('click', () => {
+      const d = parseInt(denomSelect.value);
+      let n = parseInt(numerInput.value);
+      if (n > d) n = d;
+      numerInput.value = n;
+      drawSlices(d, n);
+    });
+
+    // Initial draw
+    drawSlices(parseInt(denomSelect.value), parseInt(numerInput.value));
+  </script>
+</body>
+</html>
